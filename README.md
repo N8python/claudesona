@@ -8,20 +8,32 @@ The initial Claudesona fan art was by [thebes](https://github.com/vgel), derived
 
 ## Install from GitHub
 
-1. Download this repository with **Code -> Download ZIP**, then unzip it.
-2. Open `chrome://extensions` in Chrome.
-3. Turn on **Developer mode**.
-4. Click **Load unpacked**.
-5. Select the `chrome-extension` folder inside the unzipped repo.
-6. Open or refresh `https://claude.ai`, `https://chatgpt.com`, or `https://gemini.google.com`.
+Download this repository with **Code → Download ZIP**, then unzip it. You can also use a prebuilt ZIP from `dist/` — currently [`dist/sona-emotion-sprites-latest.zip`](dist/sona-emotion-sprites-latest.zip), same build as [`dist/sona-emotion-sprites-1.1.1.zip`](dist/sona-emotion-sprites-1.1.1.zip). Older Claude-only builds such as `claudesona-emotion-sprites-1.0.1.zip` are kept for reference; use the `sona-emotion-sprites-*` ZIP for Claude + GPT + Gemini support.
 
-Important: choose the inner `chrome-extension` folder, not the whole repository folder.
+### Chrome
 
-You can also download a prebuilt ZIP from `dist/`, unzip it, and load the unzipped folder with **Load unpacked**.
+1. Open `chrome://extensions`.
+2. Turn on **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the `chrome-extension` folder inside the unzipped repo (not the whole repository folder).
+5. Open or refresh `https://claude.ai`, `https://chatgpt.com`, or `https://gemini.google.com`.
 
-Latest ZIP: [`dist/sona-emotion-sprites-latest.zip`](dist/sona-emotion-sprites-latest.zip), currently the same build as [`dist/sona-emotion-sprites-1.1.1.zip`](dist/sona-emotion-sprites-1.1.1.zip).
+### Firefox
 
-Older Claude-only builds such as `claudesona-emotion-sprites-1.0.1.zip` are kept for reference; use the `sona-emotion-sprites-*` ZIP for Claude + GPT + Gemini support.
+**Temporary install (works on any Firefox 140+, unloads on browser restart):**
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…**.
+3. Select `chrome-extension/manifest.json` inside the unzipped repo.
+4. Open or refresh `https://claude.ai`, `https://chatgpt.com`, or `https://gemini.google.com`.
+
+**Permanent install (Firefox Developer Edition / Nightly / ESR / Unbranded only):**
+
+Release Firefox refuses unsigned extensions permanently. On a build that allows it:
+
+1. In `about:config`, set `xpinstall.signatures.required` to `false`.
+2. Download [`dist/sona-emotion-sprites-latest.zip`](dist/sona-emotion-sprites-latest.zip) and rename it to `sona-emotion-sprites.xpi` (an XPI is just a ZIP with `manifest.json` at the root).
+3. In `about:addons`, click the gear icon → **Install Add-on From File…** → pick the XPI.
 
 ## Supported Tags
 
