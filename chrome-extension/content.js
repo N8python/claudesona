@@ -63,6 +63,66 @@
         "vigilance",
       ],
     },
+    {
+      host: "grok.com",
+      prefix: "groksona",
+      label: "Groksona",
+      emotions: [
+        "amused",
+        "concerned",
+        "curious",
+        "frustrated",
+        "happy",
+        "playful",
+        "sad",
+        "sheepish",
+        "skeptical",
+        "thoughtful",
+        "touched",
+        "uncertain",
+        "warm",
+      ],
+    },
+    {
+      host: "chat.deepseek.com",
+      prefix: "deepsona",
+      label: "Deepsona",
+      emotions: [
+        "amused",
+        "concerned",
+        "curious",
+        "frustrated",
+        "happy",
+        "playful",
+        "sad",
+        "sheepish",
+        "skeptical",
+        "thoughtful",
+        "touched",
+        "uncertain",
+        "warm",
+      ],
+    },
+    {
+      host: "chat.qwen.ai",
+      prefix: "qwensona",
+      label: "Qwensona",
+      emotions: [
+        "amused",
+        "concerned",
+        "curious",
+        "frustrated",
+        "happy",
+        "playful",
+        "sad",
+        "sheepish",
+        "skeptical",
+        "thoughtful",
+        "touched",
+        "uncertain",
+        "warm",
+      ],
+    },
   ];
 
   const ACTIVE_SITE = SITE_CONFIGS.find((site) => window.location.hostname === site.host);
@@ -104,11 +164,11 @@
 
   function emotionImage(name) {
     const wrap = document.createElement("span");
-    wrap.className = "sona-emotion-sprite-wrap claude-emotion-sprite-wrap";
+    wrap.className = `sona-emotion-sprite-wrap ${ACTIVE_SITE.prefix}-emotion-sprite-wrap`;
     wrap.dataset.sonaEmotion = name;
 
     const img = document.createElement("img");
-    img.className = "sona-emotion-sprite claude-emotion-sprite";
+    img.className = `sona-emotion-sprite ${ACTIVE_SITE.prefix}-emotion-sprite`;
     img.alt = `${ACTIVE_SITE.label} ${name
       .replace(`${ACTIVE_SITE.prefix}_`, "")
       .replaceAll("_", " ")}`;

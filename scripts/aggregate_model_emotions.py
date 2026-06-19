@@ -72,12 +72,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--site-url",
-        default="https://github.com/N8python/claudesona",
+        default="https://github.com/kodee2k/aisonas",
         help="Optional OpenRouter HTTP-Referer header.",
     )
     parser.add_argument(
         "--app-title",
-        default="Claudesona emotion aggregation",
+        default="Aisonas emotion aggregation",
         help="Optional OpenRouter X-Title header.",
     )
     parser.add_argument(
