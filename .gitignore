@@ -6,5 +6,6 @@ dist/*
 !dist/
 !dist/claudesona-emotion-sprites-1.0.1.zip
 !dist/sona-emotion-sprites-1.1.1.zip
+!dist/sona-emotion-sprites-1.1.2.zip
 !dist/sona-emotion-sprites-latest.zip
 secret.txt

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Sona Emotion Sprites",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Unofficial fan extension that turns model-specific emotion tags into local persona sprites on Claude, ChatGPT, and Gemini.",
   "icons": {
     "16": "icons/icon16.png",

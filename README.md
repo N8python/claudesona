@@ -19,7 +19,13 @@ Important: choose the inner `chrome-extension` folder, not the whole repository 
 
 You can also download a prebuilt ZIP from `dist/`, unzip it, and load the unzipped folder with **Load unpacked**.
 
-Latest ZIP: [`dist/sona-emotion-sprites-latest.zip`](dist/sona-emotion-sprites-latest.zip), currently the same build as [`dist/sona-emotion-sprites-1.1.1.zip`](dist/sona-emotion-sprites-1.1.1.zip).
+Latest ZIP: [`dist/sona-emotion-sprites-latest.zip`](dist/sona-emotion-sprites-latest.zip), currently the same build as [`dist/sona-emotion-sprites-1.1.2.zip`](dist/sona-emotion-sprites-1.1.2.zip). Version 1.1.2 includes support for invisible zero-width characters in emotion tags.
+
+To update an unpacked installation, replace its files with the new build (or load this repository's `chrome-extension` folder), click **Reload** on Sona Emotion Sprites in `chrome://extensions`, then refresh your conversation tabs. Unpacked extensions do not automatically update when the GitHub repository changes.
+
+### Building the ZIPs
+
+After changing the extension, update `chrome-extension/manifest.json` and run `python3 scripts/build_extension.py`. This builds both the versioned archive and `latest` directly from `chrome-extension`. Run `python3 scripts/build_extension.py --check` to verify both archives match the source byte for byte.
 
 Older Claude-only builds such as `claudesona-emotion-sprites-1.0.1.zip` are kept for reference; use the `sona-emotion-sprites-*` ZIP for Claude + GPT + Gemini support.
 
