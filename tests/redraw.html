@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- Serve the repository root (python3 -m http.server) and open /tests/redraw.html. Results: see the README section "Testing". --><meta charset="utf-8"><title>Double render repro</title>
+<link rel="stylesheet" href="../chrome-extension/content.css">
+<style>body{font:15px system-ui;margin:16px;background:#fff;color:#111} .sc{border-bottom:1px solid #ddd;padding:6px 0} h4{margin:0 0 4px;font-weight:600}</style>
+<div id="root"></div>
+<script>window.chrome = { runtime: { getURL: (p) => "../chrome-extension/" + p } };</script>
+<script src="../chrome-extension/claudemoji.js"></script>
+<script>
+// Each scenario plays the part of the page's framework: it creates text nodes, keeps references to
+// them, and later rewrites or removes exactly those nodes, the way React does.
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const SETTLE = 420;                                   // longer than the content script's 250 ms rescan
+const sprites = (el) => [...el.querySelectorAll("img")].map((i) => i.getAttribute("src").split("/").pop().replace(".png", ""));
+const errors = [];
+function box(title) {
+  const d = document.createElement("div"); d.className = "sc";
+  const h = document.createElement("h4"); h.textContent = title; d.append(h);
+  document.getElementById("root").append(d); return d;
+}
+const scenarios = {
+  // A. Streaming: each chunk of text arrives in its own span, and the tag is cut between two chunks.
+  //    When the block is finished the framework removes its chunk spans and writes the text once.
+  async "A split across stream chunks, then block redrawn"() {
+    const d = box("A"); const li = document.createElement("li"); d.append(li);
+    const s1 = document.createElement("span"); s1.textContent = "When the context window is at 98%:\n<claude_";
+    li.append(s1); await wait(60);
+    const s2 = document.createElement("span"); s2.textContent = "💀 />";
+    li.append(s2); await wait(SETTLE);
+    const during = sprites(li).length;
+    for (const s of [s1, s2]) { try { li.removeChild(s); } catch (e) { errors.push("A removeChild: " + e.name); } }
+    await wait(SETTLE);
+    const gap = sprites(li).length;                   // the recording shows the lone skull here
+    li.append(document.createTextNode("When the context window is at 98%:\n<claude_💀 />"));
+    await wait(SETTLE);
+    return { during, afterSpansRemoved: gap, final: sprites(li).length, text: li.textContent, want: 1 };
+  },
+  // B. The same, with the chunks as bare text nodes directly inside the list item.
+  async "B split across sibling text nodes, then removed and rewritten"() {
+    const d = box("B"); const p = document.createElement("p"); d.append(p);
+    const t1 = document.createTextNode("<claude_"); p.append(t1); await wait(60);
+    const t2 = document.createTextNode("💀 />"); p.append(t2); await wait(SETTLE);
+    const during = sprites(p).length;
+    for (const t of [t1, t2]) { try { p.removeChild(t); } catch (e) { errors.push("B removeChild: " + e.name); } }
+    p.append(document.createTextNode("<claude_💀 />"));
+    await wait(SETTLE);
+    return { during, final: sprites(p).length, text: p.textContent, want: 1 };
+  },
+  // C. One text node that the framework keeps rewriting as the text grows.
+  async "C one text node rewritten as it grows"() {
+    const d = box("C"); const p = document.createElement("p"); const em = document.createElement("i"); d.append(p);
+    const t = document.createTextNode(""); p.append(t, em);
+    const full = "Dead <claude_💀 /> and then some more words after it <claude_🫠 /> end";
+    const chars = [...full]; const counts = [];
+    for (let i = 3; i <= chars.length + 2; i += 3) { t.nodeValue = chars.slice(0, i).join(""); await wait(30); counts.push(sprites(p).length); }
+    await wait(SETTLE);
+    return { maxSeenWhileStreaming: Math.max(...counts), final: sprites(p).length, text: p.textContent, want: 2 };
+  },
+  // D. A text node the framework later removes by reference, then writes the block again.
+  async "D text node removed by reference, block rewritten"() {
+    const d = box("D"); const li = document.createElement("li"); const tail = document.createElement("b"); d.append(li);
+    const t = document.createTextNode("Alright:\n<claude_💀 />"); li.append(t, tail); await wait(SETTLE);
+    const during = sprites(li).length;
+    try { li.removeChild(t); } catch (e) { errors.push("D removeChild: " + e.name); }
+    await wait(SETTLE);
+    const gap = sprites(li).length;
+    li.insertBefore(document.createTextNode("Alright:\n<claude_💀 />"), tail); await wait(SETTLE);
+    return { during, afterTextRemoved: gap, final: sprites(li).length, text: li.textContent, want: 1 };
+  },
+  // E. The framework replaces the whole content with textContent.
+  async "E textContent rewrite"() {
+    const d = box("E"); const p = document.createElement("p"); d.append(p);
+    p.textContent = "One <claude_😁 />"; await wait(SETTLE);
+    p.textContent = "One <claude_😁 /> two <claude_💀 />"; await wait(SETTLE);
+    return { final: sprites(p).length, text: p.textContent, want: 2 };
+  },
+  // F. Old named tags cut between chunks (the same path, to see whether the fault predates emoji tags).
+  async "F named tag split across chunks, then block redrawn"() {
+    const d = box("F"); const li = document.createElement("li"); d.append(li);
+    const s1 = document.createElement("span"); s1.textContent = "Text <claude_"; li.append(s1); await wait(60);
+    const s2 = document.createElement("span"); s2.textContent = "happy />"; li.append(s2); await wait(SETTLE);
+    for (const s of [s1, s2]) { try { li.removeChild(s); } catch (e) { errors.push("F removeChild: " + e.name); } }
+    li.append(document.createTextNode("Text <claude_happy />")); await wait(SETTLE);
+    return { final: sprites(li).length, text: li.textContent, want: 1 };
+  },
+};
+(async () => {
+  const which = new URLSearchParams(location.search).get("script") || "after";
+  let src = await (await fetch("../chrome-extension/content.js", { cache: "no-store" })).text();
+  src = src.replace("window.location.hostname", '"claude.ai"');
+  window.addEventListener("error", (e) => errors.push("page error: " + e.message));
+  (0, eval)(src);
+  const out = [];
+  for (const [name, fn] of Object.entries(scenarios)) {
+    try {
+      const r = await fn();
+      const ok = r.final === r.want && !/claude_/.test(r.text) && (r.afterSpansRemoved ?? 0) === 0 && (r.afterTextRemoved ?? 0) === 0 && (r.maxSeenWhileStreaming ?? 0) <= r.want;
+      out.push((ok ? "PASS " : "FAIL ") + name + "  " + JSON.stringify(r));
+    } catch (e) { out.push("FAIL " + name + "  threw " + e); }
+  }
+  out.push("exceptions: " + (errors.length ? errors.join("; ") : "none"));
+  window.__repro = which + "\n" + out.join("\n");
+})();
+</script>

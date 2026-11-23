@@ -6,11 +6,19 @@ When a supported model site renders one of these literal tags in normal page tex
 
 Tags are host-specific:
 
-- `claude.ai` renders only `<claude_* />` tags.
+- `claude.ai` renders only `<claude_* />` tags, where `*` is any emoji or one of the names below.
 - `chatgpt.com` renders only `<gpt_* />` tags.
 - `gemini.google.com` renders only `<gemini_* />` tags.
 
-Claude tags:
+Claude emoji tags: `<claude_😁 />`, with any single emoji in the tag.
+
+- 174 emoji (faces, hand gestures, hearts, reaction symbols, cat faces) have a Claudesona in `assets/claudemoji/`; the list is `claudemoji.js`.
+- 👀, ✨, 🎉 and 🔥 are routed to 🧐, 🤩, 🥳 and ❤️‍🔥.
+- Coloured and variant hearts (🧡 💙 ♥️ 💗 and so on) show the nearest heart Claudesona.
+- Any other emoji is shown as the plain emoji: `<claude_🚀 />` becomes 🚀.
+- Skin tones and variation selectors are ignored when matching, and a gender suffix falls back to the base emoji.
+
+Claude named tags (the original 13, still supported):
 
 - `<claude_amused />`
 - `<claude_concerned />`

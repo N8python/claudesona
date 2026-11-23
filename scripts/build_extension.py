@@ -15,8 +15,8 @@ def main():
     root = Path(__file__).resolve().parents[1]
     source = root / "chrome-extension"
     version = json.loads((source / "manifest.json").read_text())["version"]
-    files = [source / name for name in ("manifest.json", "content.js", "content.css", "README.md")]
-    for directory in ("assets", "icons"):
+    files = [source / name for name in ("manifest.json", "claudemoji.js", "content.js", "content.css", "README.md")]
+    for directory in ("assets", "assets/claudemoji", "icons"):
         files.extend(sorted((source / directory).glob("*.png")))
     expected = {path.relative_to(source).as_posix(): path.read_bytes() for path in files}
     dist = root / "dist"

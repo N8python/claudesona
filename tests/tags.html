@@ -1,0 +1,97 @@
+<!doctype html>
+<!-- Serve the repository root (python3 -m http.server) and open /tests/tags.html. Results: see the README section "Testing". --><meta charset="utf-8"><title>Claudemoji tag test</title>
+<link rel="stylesheet" href="../chrome-extension/content.css">
+<style>body{font:15px system-ui;margin:16px;background:#fff;color:#111}
+.case{border-bottom:1px solid #ddd;padding:4px 0;margin:0}.lab{color:#777;font-size:12px;display:block}code{background:#eee}</style>
+<div id="cases"><p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p>
+<p class="case"></p></div>
+<p id="split"><span>split: &lt;clau</span><span>de_😁</span><b> /&gt;</b> tail</p>
+<p id="code">in code: <code>&lt;claude_😁 /&gt;</code></p>
+<p id="stream"></p>
+<script>window.chrome = { runtime: { getURL: (p) => "../chrome-extension/" + p } };</script>
+<script src="../chrome-extension/claudemoji.js"></script>
+<script>
+const CASES = [["named tag (old system)", "Old: <claude_happy /> end", "sprite", "assets/claude_happy.png", "Old:  end"], ["emoji with a Claudesona", "Grin <claude_😁 /> end", "sprite", "assets/claudemoji/1f601.png", "Grin  end"], ["no self-closing slash", "<claude_😁>", "sprite", "assets/claudemoji/1f601.png", ""], ["emoji without one -> plain emoji", "Launch <claude_🚀 /> end", "text", "", "Launch 🚀 end"], ["pizza -> plain", "<claude_🍕 />", "text", "", "🍕"], ["skin tone stripped", "<claude_👍🏽 />", "sprite", "assets/claudemoji/1f44d.png", ""], ["gender suffix -> base", "<claude_🤷‍♀️ />", "sprite", "assets/claudemoji/1f937.png", ""], ["heart with selector", "<claude_❤️ />", "sprite", "assets/claudemoji/2764.png", ""], ["heart without selector", "<claude_❤ />", "sprite", "assets/claudemoji/2764.png", ""], ["heart on fire (ZWJ)", "<claude_❤️‍🔥 />", "sprite", "assets/claudemoji/2764-200d-1f525.png", ""], ["face in clouds (ZWJ)", "<claude_😶‍🌫️ />", "sprite", "assets/claudemoji/1f636-200d-1f32b.png", ""], ["head shaking", "<claude_🙂‍↔️ />", "sprite", "assets/claudemoji/1f642-200d-2194.png", ""], ["smiling face U+263A", "<claude_☺️ />", "sprite", "assets/claudemoji/263a.png", ""], ["zero-width chars around emoji", "<​claude_😴​ /​>", "sprite", "assets/claudemoji/1f634.png", ""], ["zero-width chars in old tag", "<​claude_sad​/>", "sprite", "assets/claude_sad.png", ""], ["orange heart -> red heart Claudesona", "Heart: <claude_🧡 />", "sprite", "assets/claudemoji/2764.png", "Heart: "], ["blue heart", "<claude_💙 />", "sprite", "assets/claudemoji/2764.png", ""], ["heart suit with selector", "<claude_♥️ />", "sprite", "assets/claudemoji/2764.png", ""], ["growing heart -> sparkling heart", "<claude_💗 />", "sprite", "assets/claudemoji/1f496.png", ""], ["revolving hearts -> two hearts", "<claude_💞 />", "sprite", "assets/claudemoji/1f495.png", ""], ["eyes -> monocle face", "curious about <claude_👀 /> something", "sprite", "assets/claudemoji/1f9d0.png", "curious about  something"], ["sparkles -> star eyes", "<claude_✨ />", "sprite", "assets/claudemoji/1f929.png", ""], ["party popper -> party face", "<claude_🎉 />", "sprite", "assets/claudemoji/1f973.png", ""], ["fire -> heart on fire", "<claude_🔥 />", "sprite", "assets/claudemoji/2764-200d-1f525.png", ""], ["confetti ball -> plain (not routed)", "<claude_🎊 />", "text", "", "🎊"], ["flag -> plain", "<claude_🇯🇵 />", "text", "", "🇯🇵"], ["rainbow flag -> plain", "<claude_🏳️‍🌈 />", "text", "", "🏳️‍🌈"], ["keycap -> plain", "<claude_1️⃣ />", "text", "", "1️⃣"], ["two emoji in one tag -> plain", "<claude_😂😂 />", "text", "", "😂😂"], ["unknown name untouched", "<claude_foo />", "text", "", "<claude_foo />"], ["digits untouched", "<claude_123 />", "text", "", "<claude_123 />"], ["other prefixes untouched", "<gpt_focus /> <gpt_😁 />", "text", "", "<gpt_focus /> <gpt_😁 />"], ["three tags in one line", "a <claude_💀 /> b <claude_🚀 /> c <claude_warm />", "sprite", "assets/claudemoji/1f480.png|assets/claude_warm.png", "a  b 🚀 c "], ["prose with claude_ and brackets", "the claude_ prefix and 2 < 3 > 1", "text", "", "the claude_ prefix and 2 < 3 > 1"]];
+const strip = (s) => s.replace("../chrome-extension/", "");
+document.querySelectorAll(".case").forEach((p, i) => {
+  const lab = document.createElement("span"); lab.className = "lab"; lab.textContent = CASES[i][0];
+  const body = document.createElement("span"); body.className = "body"; body.textContent = CASES[i][1];
+  p.append(lab, body);
+});
+(async () => {
+  let src = await (await fetch("../chrome-extension/content.js", { cache: "no-store" })).text();
+  if (!src.includes("window.location.hostname")) throw new Error("hostname hook not found");
+  src = src.replace("window.location.hostname", '"claude.ai"');
+  (0, eval)(src);
+  // streaming: text arrives a few characters at a time, as on the real site
+  const s = document.getElementById("stream");
+  s.append(document.createTextNode(""));
+  const chars = [..."streamed: hello <claude_🥳 /> and <claude_🛸 /> done"];
+  let i = 0;
+  const tick = () => {
+    if (i >= chars.length) { window.__streamDone = true; return; }
+    const texts = [...s.childNodes].filter((n) => n.nodeType === 3);
+    const live = texts.length ? texts[texts.length - 1] : s.appendChild(document.createTextNode(""));
+    if (live !== s.lastChild) s.appendChild(live);
+    live.nodeValue += chars.slice(i, i + 3).join("");
+    i += 3;
+    setTimeout(tick, 15);
+  };
+  tick();
+  window.__report = () => {
+    const out = [];
+    document.querySelectorAll(".case").forEach((p, n) => {
+      const b = p.querySelector(".body");
+      const imgs = [...b.querySelectorAll("img")].map((im) => strip(im.getAttribute("src"))).join("|");
+      const [name, , kind, wantImgs, wantText] = CASES[n];
+      const ok = imgs === wantImgs && b.textContent === wantText;
+      out.push((ok ? "PASS " : "FAIL ") + name + (ok ? "" : "  want [" + wantImgs + "] " + JSON.stringify(wantText) + "  got [" + imgs + "] " + JSON.stringify(b.textContent)));
+    });
+    const sp = document.getElementById("split");
+    out.push((sp.querySelector('img[src$="claudemoji/1f601.png"]') && !sp.textContent.includes("claude_") ? "PASS " : "FAIL ") + "tag split across elements: " + JSON.stringify(sp.textContent));
+    const cd = document.getElementById("code");
+    out.push((!cd.querySelector("img") && cd.textContent.includes("<claude_😁 />") ? "PASS " : "FAIL ") + "tag inside code is left alone");
+    const st = document.getElementById("stream");
+    out.push((st.querySelector('img[src$="claudemoji/1f973.png"]') && st.textContent === "streamed: hello  and 🛸 done" ? "PASS " : "FAIL ") + "streamed text: " + JSON.stringify(st.textContent) + " imgs " + st.querySelectorAll("img").length);
+    const all = [...document.images];
+    const broken = all.filter((im) => !(im.complete && im.naturalWidth > 0)).map((im) => im.getAttribute("src"));
+    out.push((broken.length ? "FAIL " : "PASS ") + "all " + all.length + " images loaded" + (broken.length ? "; broken: " + broken.join(",") : ""));
+    const im = document.querySelector('img[src$="claudemoji/1f601.png"]');
+    const r = im.getBoundingClientRect();
+    out.push("INFO claudemoji box " + r.width + "x" + r.height + ", natural " + im.naturalWidth + "x" + im.naturalHeight + ", alt=" + im.alt + ", title=" + im.title);
+    return out.join("\n");
+  };
+})().catch((e) => { window.__err = String((e && e.stack) || e); });
+</script>
