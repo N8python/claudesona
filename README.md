@@ -8,6 +8,10 @@ On `claude.ai` the tag takes any emoji: `<claude_😁 />`. 174 emoji (faces, han
 
 The initial Claudesona fan art was by [thebes](https://github.com/vgel), derived from the Anthropic logo. The emotion-sprite derivatives are courtesy of GPT-Images-2. This project is unofficial and is not affiliated with Anthropic, OpenAI, or Google.
 
+## The 3D rig
+
+The rigged, poseable Blender model that the rendered Claudesona sprites come from is in [rig/](rig/), with a pose library of 213 emotion poses. See [rig/README.md](rig/README.md).
+
 ## Install from GitHub
 
 1. Download this repository with **Code -> Download ZIP**, then unzip it.

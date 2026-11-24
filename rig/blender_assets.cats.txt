@@ -1,0 +1,19 @@
+# Blender Asset Catalog Definition File
+VERSION 1
+
+26427ade-c30d-518d-8d25-aa39242123df:Original emotes:Original emotes
+be350016-d41a-542e-bfd9-7e58b76bf309:Emotions:Emotions
+51005642-ccc2-5e00-9006-40181a0af5b9:Emotions/Anger:Anger
+7e7f6651-c4ab-58fb-a4d0-328c1d115fb6:Emotions/Fear:Fear
+194c85ac-c0dd-5d2f-acf2-a97d3a321389:Emotions/Joy:Joy
+8f2d5b89-cf38-520c-9ff1-a6487c323a61:Emotions/Love:Love
+a4dbc104-b943-553a-847d-b6f343396ea5:Emotions/Sadness:Sadness
+5ee892e5-c121-58e4-9a91-a903c0e4b3a5:Emotions/Surprise:Surprise
+
+494866a9-ff55-5296-9018-b89249addc0b:Alternate takes:Alternate takes
+c0626231-8951-5d4a-ba36-b7c0181b3add:Alternate takes/Anger:Anger
+0da5adee-bae9-54a7-9e46-565c5bc2aba4:Alternate takes/Fear:Fear
+018c5149-7332-55d0-a924-a96708c20184:Alternate takes/Joy:Joy
+794bb235-9acd-522b-9cec-94efb87849f7:Alternate takes/Love:Love
+f0c9b29b-90b4-51c5-baa7-836220b01789:Alternate takes/Sadness:Sadness
+57a4a8ab-b3c3-5225-ba08-28daccbe01b1:Alternate takes/Surprise:Surprise
